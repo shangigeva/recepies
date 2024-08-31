@@ -137,7 +137,7 @@ export default async function MainPage() {
                     <CardTitle>{category.name}</CardTitle>
                     <CardDescription>
                       {category.subCategory.map((sub) => (
-                        <span>{sub.name},</span>
+                        <span key={sub.id}>{sub.name},</span>
                       ))}
                     </CardDescription>
                   </CardHeader>
