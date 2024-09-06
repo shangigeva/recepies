@@ -13,9 +13,11 @@ import Link from "next/link";
 
 export default async function CarouselSection() {
   const categories = await prisma.category.findMany();
+  const subCategories = await prisma.subCategory.findMany();
+  console.log(subCategories);
+
   return (
     <div dir="ltr" className="w-full  mx-4">
-      <h2 className="text-2xl font-bold mb-4 text-center">Sub Categories</h2>
       <Carousel
         dir="ltr"
         opts={{

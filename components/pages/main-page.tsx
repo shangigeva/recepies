@@ -12,44 +12,20 @@ import { prisma } from "@/lib/db";
 import { Utensils } from "lucide-react";
 import Link from "next/link";
 import CarouselSection from "./carousel-section";
+import Image from "next/image";
+import Autocomplete from "./search-recipe";
 
 export default async function MainPage() {
-  const recipes = [
-    {
-      title: "Spaghetti Carbonara",
-      description:
-        "A classic Italian pasta dish with eggs, cheese, and pancetta.",
-      cookTime: "20 mins",
-      difficulty: "Easy",
-    },
-    {
-      title: "Chicken Stir Fry",
-      description: "A quick and healthy Asian-inspired dish with vegetables.",
-      cookTime: "15 mins",
-      difficulty: "Medium",
-    },
-    {
-      title: "Vegetable Curry",
-      description:
-        "A flavorful and spicy vegetarian curry with mixed vegetables.",
-      cookTime: "30 mins",
-      difficulty: "Medium",
-    },
-    {
-      title: "Beef Tacos",
-      description:
-        "Delicious and easy-to-make Mexican-style tacos with ground beef.",
-      cookTime: "25 mins",
-      difficulty: "Easy",
-    },
-  ];
+  const recipe = await prisma.recipe.findMany();
+  console.log(recipe);
 
   const categories = await prisma.category.findMany({
     include: {
       subCategory: true,
     },
   });
-  console.log(categories);
+  const recipes = await prisma.recipe.findMany({});
+  console.log(recipes);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -99,14 +75,15 @@ export default async function MainPage() {
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
-                <form className="flex space-x-2">
+                {/* <form className="flex space-x-2">
                   <Input
                     className="max-w-lg flex-1"
                     placeholder="Search recipes"
                     type="search"
                   />
                   <Button type="submit">Search</Button>
-                </form>
+                </form> */}
+                <Autocomplete recipes={recipes} />
               </div>
             </div>
           </div>
@@ -114,11 +91,6 @@ export default async function MainPage() {
         <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48  flex flex-row items-center justify-center">
           <div className=" px-4 md:px-6 w-full ">
             <div className="flex flex-col  w-full  items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl  font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Welcome to Tasty Recipes
-                </h1>
-              </div>
               <div className="w-full space-y-2">
                 <CarouselSection />
               </div>
@@ -127,31 +99,37 @@ export default async function MainPage() {
         </section>
         <section className="w-full flex flex-row items-center justify-center py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
           <div className="container px-4 md:px-6 ">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8">
-              Featured Recipes
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
+              מתכונים מומלצים{" "}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {categories.map((category) => (
-                <Card key={category.id}>
+              {recipe.map((rec) => (
+                <Card key={rec.id}>
                   <CardHeader>
-                    <CardTitle>{category.name}</CardTitle>
-                    <CardDescription>
-                      {category.subCategory.map((sub) => (
-                        <span key={sub.id}>{sub.name},</span>
-                      ))}
+                    <CardTitle>{rec.name}</CardTitle>
+                    <CardDescription className="relative w-full h-64 overflow-hidden">
+                      {rec.image && (
+                        <Image
+                          src={rec.image}
+                          alt={rec.name}
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-lg"
+                        />
+                      )}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Cook Time: זמן בישול
+                      זמן הכנה: <span>{rec.cookTime}</span>
                     </p>
                     <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Difficulty: מורכבות
+                      רמת קושי: <span>{rec.difficulty}</span>
                     </p>
                   </CardContent>
                   <CardFooter>
-                    <Link href={`/${category.id}`} className="w-full">
-                      View Recipe
+                    <Link href={`/${rec.id}`} className="w-full">
+                      מתכון
                     </Link>
                   </CardFooter>
                 </Card>
