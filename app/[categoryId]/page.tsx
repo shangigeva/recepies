@@ -42,12 +42,10 @@ export default async function Home({
     <div dir="ltr">
       <main className=" flex flex-col">
         {category.subCategory.map((subCategory) => {
-          console.log(subCategory);
-
           return (
             <div className="">
               {subCategory.name}
-              <div className="grid grid-cols-4">
+              <div className="grid grid-cols-4" key={subCategory.id}>
                 {subCategory.Recipe.map((recipe) => (
                   <Card
                     key={recipe.id}
