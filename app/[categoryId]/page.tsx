@@ -30,7 +30,15 @@ export default async function Home({
   });
   return (
     <div dir="ltr">
-      <CarouselSection />
+      {category.subCategory.map((subCategory) => (
+        <div>
+          {subCategory.Recipe.map((recipe) => (
+            <div key={recipe.id}>
+              <div>{JSON.stringify(recipe)}</div>
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 }
