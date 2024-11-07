@@ -102,6 +102,7 @@ export default async function RecipePage({
                       {adjustIngredient(amount.trim(), servings / 4)}
                     </span>
                   )} */}
+                  <span>b</span>
                 </li>
               );
             })}
