@@ -34,6 +34,9 @@ model Recipe {
   image   String?
   difficulty   String?
   cookTime   String?
+  ingredients String?
+  steps String?
   subCategory   SubCategory @relation(fields: [subCategoryId], references: [id])
   subCategoryId Int // relation scalar field  (used in the `@relation` attribute above)
+
 }
