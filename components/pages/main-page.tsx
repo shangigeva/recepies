@@ -17,107 +17,112 @@ import Autocomplete from "./search-recipe";
 
 export default async function MainPage() {
   const recipe = await prisma.recipe.findMany();
-  console.log(recipe);
-
   const categories = await prisma.category.findMany({
     include: {
       subCategory: true,
     },
   });
-  const recipes = await prisma.recipe.findMany({});
-  console.log(recipes);
+  const recipes = await prisma.recipe.findMany();
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1">
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48  flex flex-row items-center justify-center">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
-                  Welcome to Tasty Recipes
-                </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Discover delicious recipes for every occasion. From quick
-                  weeknight dinners to impressive party dishes.
-                </p>
-              </div>
-              <div className="w-full max-w-sm space-y-2">
-                {/* <form className="flex space-x-2">
-                  <Input
-                    className="max-w-lg flex-1"
-                    placeholder="Search recipes"
-                    type="search"
-                  />
-                  <Button type="submit">Search</Button>
-                </form> */}
-                <Autocomplete recipes={recipes} />
-              </div>
-            </div>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Header Section */}
+      <header className="bg-gradient-to-r from-teal-400 via-teal-500 to-teal-600 text-white py-24">
+        <div className="container mx-auto px-4 md:px-6 text-center">
+          <h1 className="text-5xl font-extrabold md:text-7xl tracking-tight text-gray-800">
+            שני גבע
+          </h1>
+          <h2 className="text-2xl font-semibold mt-2 text-gray-900">
+            בלוג המתכונים
+          </h2>
+          <p className="mt-6 text-lg md:text-xl max-w-3xl mx-auto text-gray-700">
+            מזמינה אתכם לחפש את אחד המתכונים האהובים שלי
+          </p>
+          <div className="mt-12 w-full max-w-md mx-auto">
+            <Autocomplete recipes={recipes} />
           </div>
-        </section>
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48  flex flex-row items-center justify-center">
-          <div className=" px-4 md:px-6 w-full ">
-            <div className="flex flex-col  w-full  items-center space-y-4 text-center">
-              <div className="w-full space-y-2">
-                <CarouselSection />
-              </div>
-            </div>
+        </div>
+      </header>
+
+      {/* Carousel Section */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tight text-center text-gray-800 mb-8">
+            מנות פופולריות
+          </h2>
+          <CarouselSection />
+        </div>
+      </section>
+
+      {/* Recommended Recipes Section */}
+      <section className="py-16 md:py-24 bg-gray-100">
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-3xl font-bold tracking-tight text-center mb-12 text-gray-800">
+            מתכונים מומלצים
+          </h2>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {recipe.map((rec) => (
+              <Card
+                key={rec.id}
+                className="bg-white shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300"
+              >
+                <CardHeader>
+                  <CardTitle className="text-lg font-semibold text-gray-900">
+                    {rec.name}
+                  </CardTitle>
+                  <CardDescription className="relative w-full h-48 overflow-hidden rounded-lg">
+                    {rec.image && (
+                      <Image
+                        src={rec.image}
+                        alt={rec.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="rounded-lg"
+                      />
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600">
+                    זמן הכנה: <span>{rec.cookTime}</span>
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    רמת קושי: <span>{rec.difficulty}</span>
+                  </p>
+                </CardContent>
+                <CardFooter>
+                  <Link
+                    href={`/${rec.id}`}
+                    className="text-teal-600 hover:underline"
+                  >
+                    מתכון
+                  </Link>
+                </CardFooter>
+              </Card>
+            ))}
           </div>
-        </section>
-        <section className="w-full flex flex-row items-center justify-center py-12 md:py-24 lg:py-32 bg-gray-100 dark:bg-gray-800">
-          <div className="container px-4 md:px-6 ">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl mb-8 text-center">
-              מתכונים מומלצים{" "}
-            </h2>
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-              {recipe.map((rec) => (
-                <Card key={rec.id}>
-                  <CardHeader>
-                    <CardTitle>{rec.name}</CardTitle>
-                    <CardDescription className="relative w-full h-64 overflow-hidden">
-                      {rec.image && (
-                        <Image
-                          src={rec.image}
-                          alt={rec.name}
-                          layout="fill"
-                          objectFit="cover"
-                          className="rounded-lg"
-                        />
-                      )}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      זמן הכנה: <span>{rec.cookTime}</span>
-                    </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      רמת קושי: <span>{rec.difficulty}</span>
-                    </p>
-                  </CardContent>
-                  <CardFooter>
-                    <Link href={`/${rec.id}`} className="w-full">
-                      מתכון
-                    </Link>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2023 Tasty Recipes. All rights reserved.
-        </p>
-        <nav className="sm:mr-auto flex gap-4 sm:gap-6">
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Terms of Service
-          </Link>
-          <Link className="text-xs hover:underline underline-offset-4" href="#">
-            Privacy
-          </Link>
-        </nav>
+        </div>
+      </section>
+
+      {/* Footer Section */}
+      <footer className="bg-teal-800 text-white py-6">
+        <div className="container mx-auto px-4 md:px-6 flex flex-col items-center sm:flex-row justify-between">
+          <p className="text-xs">© 2023 Tasty Recipes. כל הזכויות שמורות.</p>
+          <nav className="flex space-x-4">
+            <Link
+              href="#"
+              className="text-xs hover:underline underline-offset-4"
+            >
+              תנאי שימוש
+            </Link>
+            <Link
+              href="#"
+              className="text-xs hover:underline underline-offset-4"
+            >
+              פרטיות
+            </Link>
+          </nav>
+        </div>
       </footer>
     </div>
   );

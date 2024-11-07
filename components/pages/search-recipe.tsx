@@ -58,32 +58,31 @@ export default function Autocomplete({ recipes }: { recipes: Recipe[] }) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger>
+        <Button>{value || "Select a recipe"}</Button>
+      </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search users..." />
-          <CommandEmpty>No user found.</CommandEmpty>
+          <CommandInput placeholder="Search recipes..." />
+          <CommandEmpty>No recipe found.</CommandEmpty>
           <CommandGroup>
-            {recipes.map((user) => {
-              console.log(user);
-
-              return (
-                <CommandItem
-                  key={user.id}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
-                    setOpen(false);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      value === user.name ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                  {user.name}
-                </CommandItem>
-              );
-            })}
+            {recipes.map((recipe) => (
+              <CommandItem
+                key={recipe.id}
+                onSelect={(currentValue) => {
+                  setValue(currentValue === value ? "" : currentValue);
+                  setOpen(false);
+                }}
+              >
+                <Check
+                  className={cn(
+                    "mr-2 h-4 w-4",
+                    value === recipe.name ? "opacity-100" : "opacity-0"
+                  )}
+                />
+                {recipe.name}
+              </CommandItem>
+            ))}
           </CommandGroup>
         </Command>
       </PopoverContent>
