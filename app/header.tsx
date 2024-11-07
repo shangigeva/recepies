@@ -1,3 +1,5 @@
+import SearchDialog from "@/components/pages/search-dialog";
+import { prisma } from "@/lib/db";
 import { InstagramLogoIcon } from "@radix-ui/react-icons";
 import {
   Facebook,
@@ -9,7 +11,9 @@ import {
 import Link from "next/link";
 import React from "react";
 
-const HeaderComponent = () => {
+const HeaderComponent = async () => {
+  const recipes = await prisma.recipe.findMany();
+
   return (
     <div>
       <header className="px-4 lg:px-6 h-14 flex items-center">
@@ -57,6 +61,7 @@ const HeaderComponent = () => {
           >
             <Instagram />
           </Link>
+          <SearchDialog recipes={recipes} />
         </nav>
       </header>
     </div>
