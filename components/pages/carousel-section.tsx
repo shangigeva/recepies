@@ -9,8 +9,6 @@ import { prisma } from "@/lib/db";
 import Image from "next/image";
 import Link from "next/link";
 
-// Sample sub-categories data
-
 export default async function CarouselSection() {
   const categories = await prisma.category.findMany();
   const subCategories = await prisma.subCategory.findMany();
