@@ -9,14 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import CarouselSection from "@/components/pages/carousel-section";
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -44,7 +37,7 @@ export default async function Home({
         {category.subCategory.map((subCategory) => {
           return (
             <div className="">
-              {subCategory.name}
+              {/* {subCategory.name} */}
               <div className="grid grid-cols-4" key={subCategory.id}>
                 {subCategory.Recipe.map((recipe) => (
                   <Card
